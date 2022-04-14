@@ -41,6 +41,11 @@ public class Wallet implements Serializable {
     @Column(name = "status", nullable = false, columnDefinition = "TINYINT")
     private EnumStatus status;
 
-    @Column(name = "amount")
+    @Column(name = "amount", nullable = false)
     private BigDecimal amount;
+
+    public Wallet(EnumStatus status, BigDecimal amount) {
+        this.status = status;
+        this.amount = amount;
+    }
 }

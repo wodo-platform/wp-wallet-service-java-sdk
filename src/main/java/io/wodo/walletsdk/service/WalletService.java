@@ -2,12 +2,15 @@ package io.wodo.walletsdk.service;
 
 import io.wodo.walletsdk.domain.Wallet;
 import io.wodo.walletsdk.enumtype.EnumStatus;
-import io.wodo.walletsdk.exception.WalletNotFoundException;
+import io.wodo.walletsdk.exception.NotFoundException;
+import io.wodo.walletsdk.model.request.WalletCreateRequest;
+import io.wodo.walletsdk.model.request.WalletUpdateRequest;
 import io.wodo.walletsdk.repository.WalletRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -16,12 +19,13 @@ public class WalletService {
     @Autowired
     private WalletRepository walletRepository;
 
-    public Wallet createWallet(Wallet wallet) {
-        return walletRepository.save(wallet);
+    public Wallet createWallet(WalletCreateRequest createWalletRequest) {
+        Wallet _wallet = new Wallet(createWalletRequest.getStatus(), createWalletRequest.getAmount());
+        return walletRepository.save(_wallet);
     }
 
-    public List<Wallet> getAllWallets() {
-        return walletRepository.findAll();
+    public Page<Wallet> getAllWallets(Pageable pageable) {
+        return walletRepository.findAll(pageable);
     }
 
     public Wallet findById(Long walletId) {
@@ -29,14 +33,14 @@ public class WalletService {
         if (_wallet.isPresent() && _wallet.get().getStatus() == EnumStatus.ACTIVE) {
             return _wallet.get();
         } else {
-            throw new WalletNotFoundException();
+            throw new NotFoundException();
         }
     }
 
-    public Wallet updateWallet(Long walletId, Wallet wallet) {
+    public Wallet updateWallet(Long walletId, WalletUpdateRequest walletUpdateRequest) {
         Wallet _wallet = findById(walletId);
-        _wallet.setStatus(wallet.getStatus());
-        _wallet.setAmount(wallet.getAmount());
+        _wallet.setStatus(walletUpdateRequest.getStatus());
+        _wallet.setAmount(walletUpdateRequest.getAmount());
         return walletRepository.save(_wallet);
     }
 

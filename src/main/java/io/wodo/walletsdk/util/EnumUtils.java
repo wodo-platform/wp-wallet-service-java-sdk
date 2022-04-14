@@ -1,12 +1,9 @@
 package io.wodo.walletsdk.util;
 
 import io.wodo.walletsdk.enumtype.ValueEnum;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public final class EnumUtils {
 
-    private static final Logger logger = LoggerFactory.getLogger(EnumUtils.class);
 
     private EnumUtils() {
     }
@@ -15,7 +12,6 @@ public final class EnumUtils {
         try {
             return Enum.valueOf(enumType, name);
         } catch (Exception e) {
-            logger.error("Cannot find any enum constant related to given name", e);
             return defaultEnumTypeIfNotFound;
         }
     }
